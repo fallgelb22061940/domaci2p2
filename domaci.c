@@ -6,7 +6,7 @@ typedef struct doprinos
     char mejl[256];
     int broj_linija;
     int ukupno_linija;
-    char *datum[11];
+    char datum[11];
 } doprinos;
 typedef struct elem
 {
@@ -44,8 +44,20 @@ elem *ulaz()
     fclose(ulaz);
     return vugla;
 }
-elem *merge(elem *lista)
+void sort1(elem *lista)
 {
+    elem *doprinos = 0, *temp = 0;
+    int tempcvor;
+    doprinos = lista;
+    while (doprinos != NULL){
+        temp = doprinos;
+        while (temp->next != NULL){
+            if (strcmp(temp->red.mejl, temp->next->red.mejl) <0 ){
+                tempcvor = temp->red.mejl;
+
+            }
+        }
+    }
 }
 int main()
 {
