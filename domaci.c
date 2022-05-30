@@ -55,7 +55,10 @@ void merge(elem *lista)
                 prvi->red.broj_linija += drugi->red.broj_linija;
                 free(drugi);
             }
-            promenljiva = drugi;
+            if (drugi == prvi->next)
+            {
+                promenljiva = drugi;
+            }
         }
     }
 }
@@ -71,7 +74,7 @@ void ispis(elem *lista)
 int main()
 {
     elem *start = ulaz();
-    // merge(start);
+    merge(start);
     ispis(start);
     return 0;
 }
