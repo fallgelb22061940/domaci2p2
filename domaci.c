@@ -5,7 +5,6 @@ typedef struct doprinos
 {
     char mejl[256];
     int broj_linija;
-    int ukupno_linija;
     char datum[11];
 } doprinos;
 typedef struct elem
@@ -25,7 +24,7 @@ elem *ulaz()
     elem *vugla = NULL, *rep = vugla, *tmp;
     doprinos red;
     char *format = "%s %d %s";
-    while (fscanf(ulaz, format, red.mejl, red.broj_linija, red.datum) == 3)
+    while (fscanf(ulaz, format, red.mejl, &red.broj_linija, red.datum) == 3)
     {
         tmp = malloc(sizeof(elem));
         tmp->red = red;
@@ -44,25 +43,35 @@ elem *ulaz()
     fclose(ulaz);
     return vugla;
 }
-void sort1(elem *lista)
+void merge(elem *lista)
 {
-    elem *doprinos = 0, *temp = 0;
-    int tempcvor;
-    doprinos = lista;
-    while (doprinos != NULL){
-        temp = doprinos;
-        while (temp->next != NULL){
-            if (strcmp(temp->red.mejl, temp->next->red.mejl) <0 ){
-                tempcvor = temp->red.mejl;
-
+    elem *promenljiva;
+    for (elem *prvi = lista; prvi; prvi = prvi->next)
+    {
+        for (elem *drugi = lista->next; drugi; drugi = drugi->next)
+        {
+            if (!strcmp(drugi->red.mejl, prvi->red.mejl))
+            {
+                prvi->red.broj_linija += drugi->red.broj_linija;
+                free(drugi);
             }
+            promenljiva = drugi;
         }
     }
+}
+void ispis(elem *lista)
+{
+    FILE *izlaz = fopen("result.txt", "w+");
+    for (; lista; lista = lista->next)
+    {
+        fprintf(izlaz, "%s %d\n", lista->red.mejl, lista->red.broj_linija);
+    }
+    fclose(izlaz);
 }
 int main()
 {
     elem *start = ulaz();
-    FILE *izlaz = fopen("result.txt", "w+");
-    fclose(izlaz);
+    // merge(start);
+    ispis(start);
     return 0;
 }
