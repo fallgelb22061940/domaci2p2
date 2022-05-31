@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct doprinos
+typedef struct doprinos //originalna struktura
 {
     char mejl[256];
     int broj_linija;
     char datum[11];
 } doprinos;
-typedef struct elem
+typedef struct elem //ulančana lista
 {
     doprinos red;
     struct elem *next;
-    // struct elem *prev;
 } elem;
 elem *ulaz()
 {
@@ -58,19 +57,17 @@ void sort1(elem *lista)
         }
     }
 }
-
 void merge(elem *lista)
 {
-    while(lista->next)
+    while (lista->next)
     {
         elem *sled = lista->next;
 
-        if(strcmp(lista->red.mejl, sled->red.mejl) == 0)
+        if (strcmp(lista->red.mejl, sled->red.mejl) == 0)
         {
             lista->red.broj_linija += sled->red.broj_linija;
             lista->next = sled->next;
             free(sled);
- 
         }
         else
         {
@@ -78,7 +75,6 @@ void merge(elem *lista)
         }
     }
 }
-
 void sort2(elem *lista)
 {
     for (elem *prvi = lista; prvi; prvi = prvi->next)
@@ -102,14 +98,14 @@ void ispis(elem *lista)
         fprintf(izlaz, "%s %d", lista->red.mejl, lista->red.broj_linija);
         if (lista->next)
         {
-            fprintf(izlaz,"\n");
+            fprintf(izlaz, "\n");
         }
     }
     fclose(izlaz);
 }
 void pocisti(elem *lista)
 {
-    while(lista)
+    while (lista)
     {
         elem *sled = lista->next;
         free(lista);
