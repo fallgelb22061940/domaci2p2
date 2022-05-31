@@ -43,21 +43,53 @@ elem *ulaz()
     fclose(ulaz);
     return vugla;
 }
-void merge(elem *lista)
+void sort1(elem *lista)
 {
-    elem *promenljiva;
     for (elem *prvi = lista; prvi; prvi = prvi->next)
     {
-        for (elem *drugi = lista->next; drugi; drugi = drugi->next)
+        for (elem *drugi = lista; drugi; drugi = drugi->next)
         {
-            if (!strcmp(drugi->red.mejl, prvi->red.mejl))
+            if (strcmp(prvi->red.mejl, drugi->red.mejl) <= 0)
             {
-                prvi->red.broj_linija += drugi->red.broj_linija;
-                free(drugi);
+                doprinos tmp = prvi->red;
+                prvi->red = drugi->red;
+                drugi->red = tmp;
             }
-            if (drugi == prvi->next)
+        }
+    }
+}
+
+void merge(elem *lista)
+{
+    while(lista->next)
+    {
+        elem *sled = lista->next;
+
+        if(strcmp(lista->red.mejl, sled->red.mejl) == 0)
+        {
+            lista->red.broj_linija += sled->red.broj_linija;
+            lista->next = sled->next;
+            free(sled);
+ 
+        }
+        else
+        {
+            lista = lista->next;
+        }
+    }
+}
+
+void sort2(elem *lista)
+{
+    for (elem *prvi = lista; prvi; prvi = prvi->next)
+    {
+        for (elem *drugi = lista; drugi; drugi = drugi->next)
+        {
+            if (prvi->red.broj_linija > drugi->red.broj_linija)
             {
-                promenljiva = drugi;
+                doprinos tmp = prvi->red;
+                prvi->red = drugi->red;
+                drugi->red = tmp;
             }
         }
     }
@@ -67,14 +99,30 @@ void ispis(elem *lista)
     FILE *izlaz = fopen("result.txt", "w+");
     for (; lista; lista = lista->next)
     {
-        fprintf(izlaz, "%s %d\n", lista->red.mejl, lista->red.broj_linija);
+        fprintf(izlaz, "%s %d", lista->red.mejl, lista->red.broj_linija);
+        if (lista->next)
+        {
+            fprintf(izlaz,"\n");
+        }
     }
     fclose(izlaz);
+}
+void pocisti(elem *lista)
+{
+    while(lista)
+    {
+        elem *sled = lista->next;
+        free(lista);
+        lista = sled;
+    }
 }
 int main()
 {
     elem *start = ulaz();
+    sort1(start);
     merge(start);
+    sort2(start);
     ispis(start);
+    pocisti(start);
     return 0;
 }
