@@ -12,6 +12,7 @@ typedef struct elem //ulančana lista
     doprinos red;
     struct elem *next;
 } elem;
+//otvaranje fajla i smeštanje podataka u ulančanu listu
 elem *ulaz()
 {
     FILE *ulaz = fopen("contribution.txt", "r");
@@ -20,17 +21,17 @@ elem *ulaz()
         printf("DAT_GRESKA");
         exit(0);
     }
-    elem *vugla = NULL, *rep = vugla, *tmp;
+    elem *glava = NULL, *rep = glava, *tmp;
     doprinos red;
     char *format = "%s %d %s";
-    while (fscanf(ulaz, format, red.mejl, &red.broj_linija, red.datum) == 3)
+    while (fscanf(ulaz, format, red.mejl, &red.broj_linija, red.datum) == 3)//fscanf vraća broj pročitanih podataka
     {
         tmp = malloc(sizeof(elem));
         tmp->red = red;
-        if (vugla == 0)
+        if (glava == 0)
         {
             rep = tmp;
-            vugla = rep;
+            glava = rep;
         }
         else
         {
@@ -40,8 +41,9 @@ elem *ulaz()
     }
     rep->next = 0;
     fclose(ulaz);
-    return vugla;
+    return glava;
 }
+//Sortiranje leksikografski kako bi bila lakša obrada, plus jedan od zahteva je da je to sekundarno sortiranje 
 void sort1(elem *lista)
 {
     for (elem *prvi = lista; prvi; prvi = prvi->next)
@@ -57,6 +59,7 @@ void sort1(elem *lista)
         }
     }
 }
+//Spajanje doprinosa sa istim mejlom
 void merge(elem *lista)
 {
     while (lista->next)
@@ -75,6 +78,7 @@ void merge(elem *lista)
         }
     }
 }
+//sortiranje po učinku 
 void sort2(elem *lista)
 {
     for (elem *prvi = lista; prvi; prvi = prvi->next)
@@ -90,6 +94,7 @@ void sort2(elem *lista)
         }
     }
 }
+//Ispis u zadati fajl
 void ispis(elem *lista)
 {
     FILE *izlaz = fopen("result.txt", "w+");
@@ -103,6 +108,7 @@ void ispis(elem *lista)
     }
     fclose(izlaz);
 }
+//Čišćenje memorije posle izvršenog programa
 void pocisti(elem *lista)
 {
     while (lista)
